@@ -1,19 +1,15 @@
-const express = require('express');
-const {
-    addItem,
-    getInventory,
-    getExpiryAlerts,
-    updateItem,
-    deleteItem
-} = require('../controllers/inventoryController');
-const authMiddleware = require('../middleware/authMiddleware');
+
+import express from 'express';
+// 'require' የነበረውን ወደ ES Module import እንቀይረዋለን
+import { authMiddleware } from '../middleware/authMiddleware.js';
+import { getInventory, addInventory, updateStock, deleteBatch } from '../controllers/inventoryController.js';
+
 const router = express.Router();
 
 router.use(authMiddleware);
-router.post('/add', addItem);
 router.get('/', getInventory);
-router.get('/alerts/expiry', getExpiryAlerts);
-router.put('/:id', updateItem);
-router.delete('/:id', deleteItem);
+router.post('/', addInventory);
+router.put('/:id', updateStock);
+router.delete('/:id', deleteBatch);
 
-module.exports = router;
+export default router;

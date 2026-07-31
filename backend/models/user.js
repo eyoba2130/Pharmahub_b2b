@@ -1,31 +1,35 @@
-const db = require('../config/db');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-const User = {
-    create: async (userData) => {
-        const { company_name, email, password_hash, role, license_number } = userData;
-        const [result] = await db.query(
-            `INSERT INTO users (company_name, email, password_hash, role, license_number) 
-             VALUES (?, ?, ?, ?, ?)`,
-            [company_name, email, password_hash, role, license_number]
-        );
-        return result.insertId;
-    },
-    findByEmail: async (email) => {
-        const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-        return rows[0];
-    },
-    findById: async (id) => {
-        const [rows] = await db.query(
-            'SELECT id, company_name, email, role, license_number FROM users WHERE id = ?',
-            [id]
-        );
-        return rows[0];
-    },
-    // ሁሉንም አቅራቢዎች (wholesalers) ለማግኘት (ለCreateOrder ጠቃሚ)
-    findWholesalers: async () => {
-        const [rows] = await db.query('SELECT id, company_name FROM users WHERE role = "wholesaler"');
-        return rows;
-    }
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['pharmacy', 'wholesaler', 'admin'], required: true },
+  businessName: { type: String, required: true },
+  licenseNumber: { type: String },
+  efdaLicense: { type: String }, // file path
+  isVerified: { type: Boolean, default: false },
+  subscription: {
+    plan: { type: String, enum: ['free_trial', 'monthly', 'annual'], default: 'free_trial' },
+    startDate: Date,
+    endDate: Date,
+    isActive: { type: Boolean, default: true }
+  },
+  encryptionSalt: String,
+  documents: [{ name: String, url: String, uploadedAt: Date }],
+  address: String,
+  phone: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+userSchema.methods.comparePassword = async function(candidate) {
+  return await bcrypt.compare(candidate, this.password);
 };
 
-module.exports = User;
+export default mongoose.model('User', userSchema);
