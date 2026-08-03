@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {ClipLoader} from "react-spinners";
-
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -36,7 +35,7 @@ const Login = () => {
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="text-center">
-            {/* አርዕስት */}
+            {/* contents */}
             <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Login</h2>
             <p className="mt-2 text-sm text-slate-500">Sign in to Pharmahub B2B platform</p>
           </div>
