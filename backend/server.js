@@ -30,6 +30,8 @@ app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+console.log("my MONGO_URI link", process.env.MONGO_URI);
+
 
 app.use(errorHandler);
 
