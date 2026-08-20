@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Home from './pages/home/Home';
+import ProtectRoute from './components/common/ProtectedRoute'
 
 
 function Routing() {
@@ -16,7 +17,11 @@ function Routing() {
           <Route path="/register" element={<Register />} />
 
 
-          <Route path="/" element={<Home/>}/>
+          <Route path="/" element={
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>  
+          } />
       </Routes>
       </BrowserRouter>
     </AuthProvider>
