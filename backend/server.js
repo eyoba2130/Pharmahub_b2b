@@ -3,12 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
-import authRoutes from './routes/authRoutes.js';
-import medicineRoutes from './routes/medicineRoutes.js';
-import inventoryRoutes from './routes/inventoryRoutes.js';
-import orderRoutes from './routes/orderRoutes.js';
-import chatRoutes from './routes/chatRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -20,18 +14,12 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/medicines', medicineRoutes);
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/admin', adminRoutes);
+//api
+app.use('/api', mainRouter)
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 console.log("my MONGO_URI link", process.env.MONGO_URI);
-
 
 app.use(errorHandler);
 
