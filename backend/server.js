@@ -2,8 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import connectDB from './config/db.js';
-import { errorHandler } from './middleware/errorHandler.js';
+import connectDB from './src/config/db.js';
+import { errorHandler } from './src/middleware/errorHandler.js';
+import mainRouter from './src/routes/main.routes.js';
 
 const app = express();
 connectDB();
